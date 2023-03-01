@@ -27,20 +27,20 @@ params = {
 # リクエスト結果の格納
 # ----------------------------------------
 res = requests.get(URL, params)
+# ステータス確認用（200で成功）
+res.status_code
 result = res.json()
 
 # shopのリスト情報だけ格納し直す
 items = result['results']['shop']
-len(items)
 
 
 # ----------------------------------------
-# 見やすいように必要な項目に絞って整形する
+# 見やすいように必要なカラムを抽出する
 # ----------------------------------------
 df = pd.DataFrame(items)
-# df.columns
+df.columns
 df = df[['name', 'address', 'non_smoking']]
-df.head()
 
 
 # ----------------------------------------
