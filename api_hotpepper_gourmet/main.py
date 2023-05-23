@@ -8,7 +8,7 @@ import pandas as pd
 # ----------------------------------------
 # 定数の設定
 # ----------------------------------------
-URL = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
+API_URL = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
 API_KEY = '取得したAPIキーを入力する'
 
 
@@ -26,7 +26,7 @@ params = {
 # ----------------------------------------
 # リクエスト結果の格納
 # ----------------------------------------
-res = requests.get(URL, params)
+res = requests.get(API_URL, params=params)
 # ステータス確認用（200で成功）
 res.status_code
 result = res.json()

@@ -8,7 +8,7 @@ import pandas as pd
 # ----------------------------------------
 # 定数の設定
 # ----------------------------------------
-REQUEST_URL = 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404'
+API_URL = 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404'
 APP_ID = '取得したアプリIDを入力する'
 
 
@@ -25,7 +25,7 @@ params = {
 # ----------------------------------------
 # リクエスト結果の格納
 # ----------------------------------------
-res = requests.get(REQUEST_URL, params)
+res = requests.get(API_URL, params)
 # ステータス確認用（200で成功）
 res.status_code
 result = res.json()
