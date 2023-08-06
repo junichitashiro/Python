@@ -1,8 +1,8 @@
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image
 
-image_file = 'path/to/image.png'  # 画像ファイルのパス
-excel_file = 'path/to/excel.xlsx'  # Excelファイルのパス
+image_file = '/path/to/image.png'  # 画像ファイルのパス
+excel_file = '/path/to/excel.xlsx'  # Excelファイルのパス
 sheet_name = 'Sheet1'  # ワークシート名
 cell_range = 'B11'  # 貼り付けるセル位置
 

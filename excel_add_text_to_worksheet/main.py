@@ -1,7 +1,7 @@
 import pandas as pd
 
 # テキストファイルを読み込む
-text_file = 'path/to/text_file.txt'
+text_file = '/path/to/text_file.txt'
 with open(text_file, 'r') as file:
     lines = file.readlines()
 
@@ -14,7 +14,7 @@ for line in lines:
 df = pd.DataFrame(data)
 
 # Excelファイルを読み込む
-excel_file = 'path/to/excel_file.xlsx'
+excel_file = '/path/to/excel_file.xlsx'
 book = pd.read_excel(excel_file, sheet_name=None)
 sheet_names = pd.ExcelFile(excel_file).sheet_names
 
