@@ -3,8 +3,8 @@ import subprocess
 
 # Torのデフォルトポート
 proxies = {
-    'http':'socks5://127.0.0.1:9050',
-    'https':'socks5://127.0.0.1:9050'
+    'http': 'socks5://127.0.0.1:9050',
+    'https': 'socks5://127.0.0.1:9050'
 }
 
 # Torを起動する

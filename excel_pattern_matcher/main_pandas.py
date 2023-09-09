@@ -1,7 +1,9 @@
 import pandas as pd
 
+
 def check_pattern(arr, pattern):
     return arr == pattern
+
 
 # Excelファイルの読み込み
 excel_file_path = '/path/to/master_file.xlsx'
