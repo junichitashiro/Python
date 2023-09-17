@@ -15,4 +15,4 @@ PythonからPostgreSQLのDBに接続する
 
 ### 実行SQL
 
-* **$dbCmd.CommandText** に格納する
+* 変数 **query** に格納する
