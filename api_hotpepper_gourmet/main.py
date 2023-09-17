@@ -18,24 +18,30 @@ params = {
 }
 
 # ----------------------------------------
-# リクエスト結果の格納
+# リクエストの実行
 # ----------------------------------------
-res = requests.get(API_URL, params=params)
-# ステータス確認用（200で成功）
-res.status_code
-result = res.json()
+try:
+    res = requests.get(API_URL, params=params)
 
-# shopのリスト情報だけ格納し直す
-items = result['results']['shop']
+    if res.status_code == 200:
+        result = res.json()
 
-# ----------------------------------------
-# 見やすいように必要なカラムを抽出する
-# ----------------------------------------
-df = pd.DataFrame(items)
-df.columns
-df = df[['name', 'address', 'non_smoking']]
+        # shopのリスト情報だけ格納し直す
+        items = result['results']['shop']
+        df = pd.DataFrame(items)
 
-# ----------------------------------------
-# CSVに出力する
-# ----------------------------------------
-df.to_csv('hotpepper_shop_list.csv',index=False)
+        # 必要なカラムのみ抽出する
+        df = df[['name', 'address', 'non_smoking']]
+
+        # ----------------------------------------
+        # CSVに出力する
+        # ----------------------------------------
+        df.to_csv('hotpepper_shop_list.csv',index=False)
+
+    else:
+        print(f'リクエストが失敗しました： {res.status_code}')
+
+except requests.exceptions.RequestException as e:
+    print(f'リクエストエラーが発生しました: {e}')
+except Exception as e:
+    print(f'エラーが発生しました: {e}')

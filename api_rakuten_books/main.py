@@ -17,45 +17,41 @@ params = {
 }
 
 # ----------------------------------------
-# リクエスト結果の格納
+# リクエストの実行
 # ----------------------------------------
-res = requests.get(API_URL, params)
-# ステータス確認用（200で成功）
-res.status_code
-result = res.json()
+try:
+    res = requests.get(API_URL, params)
 
-# itemsのリスト情報だけ格納し直す
-items = result['Items']
-len(items)  # 件数確認用
+    if res.status_code == 200:
+        result = res.json()
 
-# ----------------------------------------
-# データの整形
-# ----------------------------------------
-# そのままデータフレームに格納するとすべて1カラムに入ってしまうための編集
-pd.DataFrame(items).head()
-items = [item['Item'] for item in items]
-df = pd.DataFrame(items)
-df.head()
+        # itemsのリスト情報だけ格納し直す
+        items = result['Items']
 
-# 必要なカラム名を抽出する
-df.columns
-columns = ['title', 'itemCaption', 'itemPrice', 'availability']
-df = df[columns]
-df.head()
+        # そのままデータフレームに格納するとすべて1カラムに入ってしまうため編集する
+        items = [item['Item'] for item in items]
+        df = pd.DataFrame(items)
 
-# カラム名を変更する
-new_columns = ['商品', 'キャッチコピー', '価格', '販売可能']
-df.columns = new_columns
-df.head()
+        # 必要なカラムのみ抽出する
+        df = df[['title', 'itemCaption', 'itemPrice', 'availability']]
 
-# データ型の変換が必要あるか確認する
-df.dtypes
+        # カラム名を変更する
+        new_columns = ['商品', 'キャッチコピー', '価格', '販売可能']
+        df.columns = new_columns
 
-# データを商品名で並び替える
-df.sort_values('商品', ascending=False)
+        # データを商品名で並び替える
+        df.sort_values('商品', ascending=False)
 
-# 統計量を確認する
-df.describe()
+        # 統計量を確認する
+        df.describe()
 
-# データを抽出する
-df[df['価格'] > 2000]
+        # データを抽出する
+        df[df['価格'] > 2000]
+
+    else:
+        print(f'リクエストが失敗しました： {res.status_code}')
+
+except requests.exceptions.RequestException as e:
+    print(f'リクエストエラーが発生しました: {e}')
+except Exception as e:
+    print(f'エラーが発生しました: {e}')
