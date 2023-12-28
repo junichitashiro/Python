@@ -20,7 +20,7 @@ def conn_to_postgres():
 def get_data_from_table(conn, table_name, column_name, value):
     try:
         cursor = conn.cursor()
-        query = f'SELECT * FROM {table_name} WHERE {column_name} = %s;'
+        query = f'select * from {table_name} where {column_name} = %s;'
         cursor.execute(query, (value,))
         rows = cursor.fetchall()
         return rows
