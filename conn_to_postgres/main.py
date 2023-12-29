@@ -19,10 +19,10 @@ def conn_to_postgres():
 # テーブルからデータを取得する
 def get_data_from_table(conn, table_name, column_name, value):
     try:
-        cursor = conn.cursor()
+        cur = conn.cursor()
         query = f'select * from {table_name} where {column_name} = %s;'
-        cursor.execute(query, (value,))
-        rows = cursor.fetchall()
+        cur.execute(query, (value,))
+        rows = cur.fetchall()
         return rows
 
     except Exception as e:
