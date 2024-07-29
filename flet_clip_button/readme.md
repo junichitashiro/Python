@@ -13,8 +13,8 @@
 * ファイル名：data.xlsx
 * A,Bの2列×複数行で入力し、この行は可変とする
 
-| A               | B                                           |
-| --------------- | ------------------------------------------- |
-| ウェカピポ      | https://www.youtube.com/watch?v=2IZbzRj3CJk |
-| Magenta Magenta | https://www.youtube.com/watch?v=qbEx4fK6TKE |
-| イルカ          | https://www.youtube.com/watch?v=N7mXysNhgw8 |
+| A          | B                            |
+| ---------- | ---------------------------- |
+| Diggy-MO'  | メインMC・ボーカル           |
+| Bro.Hi     | ヒューマンビートボックス・MC |
+| Shinnosuke | キーボード・プログラミング   |
