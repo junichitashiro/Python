@@ -21,9 +21,11 @@
 #### 使い方
 
 ```python
+import date_difference as dd
+
 date1 = '2024/8/5'
 date2 = '2024/8/6'
-print(diff(date1, date2))
+print(dd.diff(date1, date2))
 ```
 
 #### 実行結果
@@ -47,9 +49,11 @@ print(diff(date1, date2))
 #### 使い方①
 
 ```python
+import compare_dates as cd
+
 date1 = '2024/08/10'
 date2 = '2024/08/25'
-print(compare(date1, date2))
+print(cd.compare(date1, date2))
 ```
 
 #### 実行結果①
@@ -59,9 +63,11 @@ print(compare(date1, date2))
 #### 使い方②
 
 ```python
+import compare_dates as cd
+
 date1 = '2024/08/25'
 date2 = '2024/08/25'
-print(compare(date1, date2))
+print(cd.compare(date1, date2))
 ```
 #### 実行結果②
 
@@ -106,7 +112,6 @@ print(compare(date1, date2))
 2024年8月4日に実行
 
 ```python
-from datetime import datetime
 import business_days as bd
 from pathlib import Path
 
@@ -124,7 +129,6 @@ print(bd.count(file_path, future_date))
 シート名（Sheet1）を指定する場合
 
 ```python
-from datetime import datetime
 import business_days as bd
 from pathlib import Path
 
