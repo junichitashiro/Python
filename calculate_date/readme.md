@@ -8,13 +8,13 @@
 
 ### date_difference.py
 
-与えられた2つの日付データからの日数の差を計算して返す
+与えられた2つの日付データから日数の差を計算して返す
 
-* 関数名： diff
+* 関数名: diff
 * 引数
   * date1(str)
   * date2(str)
-* 形式： 'yyyy/m/d' または 'yyyy/mm/dd'
+* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
 * 戻り値
   * int: 日数
 
@@ -38,11 +38,11 @@ print(dd.diff(date1, date2))
 
 与えられた2つの日付データからどちらが未来日であるか判定して結果を返す
 
-* 関数名： compare
+* 関数名: compare
 * 引数
   * date1(str)
   * date2(str)
-* 形式： 'yyyy/m/d' または 'yyyy/mm/dd'
+* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
 * 戻り値
   * str: 判定結果のメッセージ
 
@@ -79,12 +79,12 @@ print(cd.compare(date1, date2))
 
 与えられた日付（未来日）までの営業日を返す関数
 
-* 関数名： count
+* 関数名: count
 * 引数
   * file_path (str, pathlib.WindowsPath): Excelファイルのパス
   * future_date (str): 未来日
   * sheet_name (str, optional): シート名
-* 形式： 'yyyy/m/d' または 'yyyy/mm/dd'
+* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
 * 戻り値
   * int: 未来日から非営業日を減算した日数
 
