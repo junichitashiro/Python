@@ -132,6 +132,7 @@ print(bd.count(file_path, future_date))
 import business_days as bd
 from pathlib import Path
 
+file_path = Path.cwd() / 'non_business_days.xlsx'
 sheet_name = 'Sheet1'
 future_date = '2024/08/13'
 print(bd.count(file_path, future_date, sheet_name))
