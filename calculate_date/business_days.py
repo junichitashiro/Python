@@ -2,13 +2,34 @@ import pandas as pd
 from datetime import datetime
 
 
-def count(file_path: str, future_date: str, sheet_name: str = None) -> int:
+def non_business_days_read(file_path: str, sheet_name: str = None) -> pd.DataFrame:
     """
-    与えられた日付までの営業日を返す関数  
-    非営業日の一覧は別途ExcelファイルのA列に記載する  
+    Excelに記載した非営業日一覧をデータフレームに変換して返す関数  
     シート名の指定がない場合は先頭シートを対象とする  
     A1セルはヘッダ名として「非営業日」を記載する  
-    A2セル以降にyyyy/m/d形式で非営業日を記載する  
+    A2セル以降にyyyy/m/d形式で非営業日を記載する
+
+    Args:
+        file_path (str, pathlib.WindowsPath): Excelファイルのパス
+        sheet_name (str, optional): シート名
+
+    Returns:
+        pd.DataFrame: 非営業日一覧のデータフレーム
+    """
+    if sheet_name:
+        df = pd.read_excel(file_path, sheet_name=sheet_name, usecols='A')
+    else:
+        df = pd.read_excel(file_path, usecols='A')
+
+    df['非営業日'] = pd.to_datetime(df['非営業日']).dt.strftime('%Y/%m/%d')
+
+    return df
+
+
+def count(file_path: str, future_date: str, sheet_name: str = None) -> int:
+    """
+    与えられた日付までの営業日数を返す関数  
+    非営業日の一覧は別途Excelファイルに記載する
 
     Args:
         file_path (str, pathlib.WindowsPath): Excelファイルのパス
@@ -18,12 +39,8 @@ def count(file_path: str, future_date: str, sheet_name: str = None) -> int:
     Returns:
         int: 未来日から非営業日を減算した日数
     """
-    # Excelファイルを読み込む
-    df = pd.read_excel(file_path, usecols='A')
-    if sheet_name:
-        df = pd.read_excel(file_path, sheet_name=sheet_name, usecols='A')
-    else:
-        df = pd.read_excel(file_path, usecols='A')
+    # Excelファイルから非営業日一覧を取得する
+    df = non_business_days_read(file_path)
 
     # 非営業日をリストに変換する
     non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d')
@@ -43,3 +60,42 @@ def count(file_path: str, future_date: str, sheet_name: str = None) -> int:
     business_days = total_days - non_business_days_count
 
     return business_days
+
+
+def subtract_business_days(file_path: str, target_date: str, business_days_to_subtract: int, sheet_name: str = None) -> str:
+    """
+    日付に対して指定した営業日数を引いた日付を返す関数  
+    非営業日の一覧は別途Excelファイルに記載する  
+    指定する日付が非営業日だった場合はその旨を知らせるメッセージを返す
+
+    Args:
+        file_path (str, pathlib.WindowsPath): Excelファイルのパス
+        target_date (str): ターゲットとなる日付
+        business_days_to_subtract (int): ターゲットの日付から引く営業日数
+        sheet_name (str, optional): シート名
+
+    Returns:
+        str: 指定した日付から指定した営業日数を引いた日付
+    """
+    # Excelファイルから非営業日一覧を取得する
+    df = non_business_days_read(file_path)
+
+    # 非営業日をリストに変換する
+    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d')
+    # 指定する未来日と比較できる形式に変換する
+    non_business_days = non_business_days.apply(lambda x: x.strftime('%Y/%m/%d')).tolist()
+    target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
+
+    # 指定日のチェック
+    if target_date in non_business_days:
+        return r'指定した日付は非営業日です'
+
+    # 営業日数を計算
+    while business_days_to_subtract > 0:
+        target_date_obj -= pd.Timedelta(days=1)
+        if target_date_obj.strftime('%Y/%m/%d') not in non_business_days:
+            business_days_to_subtract -= 1
+
+    result_date = target_date_obj.strftime('%Y/%m/%d')
+
+    return result_date
