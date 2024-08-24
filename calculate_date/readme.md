@@ -168,8 +168,8 @@ from pathlib import Path
 
 file_path = Path.cwd() / 'non_business_days.xlsx'
 target_date = '2024/08/14'
-business_days_to_subtract = 3
-print(bd.subtract_business_days(file_path, target_date, business_days_to_subtract, sheet_name))
+days_to_subtract = 3
+print(bd.calc_minus(file_path, target_date, days_to_subtract))
 ```
 
 #### 実行結果①
@@ -187,8 +187,8 @@ from pathlib import Path
 file_path = Path.cwd() / 'non_business_days.xlsx'
 sheet_name = 'Sheet1'
 target_date = '2024/08/14'
-business_days_to_subtract = 3
-print(bd.subtract_business_days(file_path, target_date, business_days_to_subtract, sheet_name))
+days_to_subtract = 3
+print(bd.calc_minus(file_path, target_date, days_to_subtract, sheet_name))
 ```
 
 #### 実行結果②
