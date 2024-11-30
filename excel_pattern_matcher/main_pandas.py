@@ -1,4 +1,5 @@
 import pandas as pd
+from pathlib import Path
 
 
 def check_pattern(arr, pattern):
@@ -6,7 +7,7 @@ def check_pattern(arr, pattern):
 
 
 # Excelファイルの読み込み
-excel_file_path = '/path/to/master_file.xlsx'
+excel_file_path = Path('/path/to/master_file.xlsx')
 df = pd.read_excel(excel_file_path, dtype=str)
 
 # 比較するパラメータの格納

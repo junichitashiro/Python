@@ -1,4 +1,5 @@
 import openpyxl
+from pathlib import Path
 
 
 def check_pattern(arr, pattern):
@@ -6,7 +7,7 @@ def check_pattern(arr, pattern):
 
 
 # Excelファイルの読み込み
-excel_file_path = '/path/to/master_file.xlsx'
+excel_file_path = Path('/path/to/master_file.xlsx')
 workbook = openpyxl.load_workbook(excel_file_path, data_only=False)
 sheet = workbook.active
 
