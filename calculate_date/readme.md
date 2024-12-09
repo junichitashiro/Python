@@ -1,14 +1,10 @@
-# 概要
-
-各種日付の計算を関数にまとめたもの
-
-## 処理内容
+# 【日付計算】各種日付計算
 
 ---
 
-### date_difference.py
+## date_difference.py
 
-与えられた2つの日付データから日数の差を計算して返す
+### 与えられた2つの日付データから日数の差を計算して返す関数
 
 * 関数名: diff
 * 引数
@@ -18,7 +14,7 @@
 * 戻り値
   * int: 日数
 
-#### 使い方
+### 使い方
 
 ```python
 import date_difference as dd
@@ -28,15 +24,15 @@ date2 = '2024/8/6'
 print(dd.diff(date1, date2))
 ```
 
-#### 実行結果
+### 実行結果
 
 > 1
 
 ---
 
-### compare_dates.py
+## compare_dates.py
 
-与えられた2つの日付データからどちらが未来日であるか判定して結果を返す
+### 与えられた2つの日付データからどちらが未来日であるか判定して結果を返す
 
 * 関数名: compare
 * 引数
@@ -46,7 +42,7 @@ print(dd.diff(date1, date2))
 * 戻り値
   * str: 判定結果のメッセージ
 
-#### 使い方①
+### 使い方
 
 ```python
 import compare_dates as cd
@@ -56,28 +52,15 @@ date2 = '2024/08/25'
 print(cd.compare(date1, date2))
 ```
 
-#### 実行結果①
+### 実行結果
 
 > 2024/08/25 の方が未来日です
 
-#### 使い方②
-
-```python
-import compare_dates as cd
-
-date1 = '2024/08/25'
-date2 = '2024/08/25'
-print(cd.compare(date1, date2))
-```
-#### 実行結果②
-
-> 同じ日付です
-
 ---
 
-### business_days.py
+## business_days.py
 
-与えられた日付（未来日）までの営業日を返す関数
+### 与えられた日付（未来日）までの営業日を返す関数
 
 * 関数名: count
 * 引数
@@ -88,7 +71,7 @@ print(cd.compare(date1, date2))
 * 戻り値
   * int: 未来日から非営業日を減算した日数
 
-#### インプットとなるExcelファイル
+### インプットとなるExcelファイル
 
 * 非営業日の一覧をExcelファイルのA列に記載する
 * シート名の指定がない場合は先頭シートを対象とする
@@ -107,7 +90,7 @@ print(cd.compare(date1, date2))
     |   7   | 2024/1/14 |
     |   8   | 2024/1/20 |
 
-#### 使い方①
+### 使い方
 
 2024年8月4日に実行
 
@@ -120,13 +103,15 @@ future_date = '2024/08/13'
 print(bd.count(file_path, future_date))
 ```
 
-#### 実行結果①
+### 実行結果
 
 > 6
 
-#### 使い方②
+### 補足
 
-シート名（Sheet1）を指定する場合
+非営業日を記載しているシート名（Sheet1）を明示することも可能
+
+#### 使い方
 
 ```python
 import business_days as bd
@@ -138,13 +123,15 @@ future_date = '2024/08/13'
 print(bd.count(file_path, future_date, sheet_name))
 ```
 
-#### 実行結果②
+#### 実行結果
 
 > 6
 
 ---
 
-指定した日付から指定した営業日数を引いた日付を返す関数
+## business_days.py
+
+### 指定した日付から指定した営業日数を引いた日付を返す関数
 
 * 関数名: subtract_business_days
 * 引数
@@ -156,11 +143,11 @@ print(bd.count(file_path, future_date, sheet_name))
 * 戻り値
   * str: 指定した日付から指定した営業日数を引いた日付
 
-#### インプットとなるExcelファイル
+### インプットとなるExcelファイル
 
 * インプットに関してはcountと同じ
 
-#### 使い方①
+### 使い方
 
 ```python
 import business_days as bd
@@ -172,13 +159,15 @@ days_to_subtract = 3
 print(bd.calc_minus(file_path, target_date, days_to_subtract))
 ```
 
-#### 実行結果①
+### 実行結果
 
 > 2024/08/08
 
-#### 使い方②
+### 補足
 
-シート名（Sheet1）を指定する場合
+こちらも非営業日を記載しているシート名（Sheet1）を明示することが可能
+
+#### 使い方
 
 ```python
 import business_days as bd
@@ -191,6 +180,6 @@ days_to_subtract = 3
 print(bd.calc_minus(file_path, target_date, days_to_subtract, sheet_name))
 ```
 
-#### 実行結果②
+#### 実行結果
 
 > 2024/08/08

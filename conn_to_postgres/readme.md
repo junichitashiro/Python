@@ -1,8 +1,10 @@
-# 処理概要
+# 【DB】PostgreSQLに接続するためのサンプルコード
+
+## 処理概要
 
 PythonからPostgreSQLのDBに接続する
 
-## 処理内容
+### 処理内容
 
 1. PythonからPostgreSQLに接続する
 2. テーブル名、列名、値を変数に格納する
