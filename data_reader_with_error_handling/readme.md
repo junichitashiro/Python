@@ -26,7 +26,7 @@
 * カレントディレクトリに配置したファイルを対象とした場合のサンプル
 * ヘッダのみのファイルを許容する場合は __**kwargs__ に **header=None** を指定する
 
-#### CSVファイルの処理
+#### CSVファイルの場合
 
 ```python
 import file_reader
@@ -43,7 +43,7 @@ except Exception as e:
     print('CSVファイルの読み込みに失敗しました:', e)
 ```
 
-#### Excelファイルの処理
+#### Excelファイルの場合
 
 ```python
 import file_reader
@@ -60,4 +60,3 @@ try:
 except Exception as e:
     print('Excelファイルの読み込みに失敗しました:', e)
 ```
-
