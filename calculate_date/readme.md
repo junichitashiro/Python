@@ -133,7 +133,7 @@ print(bd.count(file_path, future_date, sheet_name))
 
 ### 指定した日付から指定した営業日数を引いた日付を返す関数
 
-* 関数名: subtract_business_days
+* 関数名: calc_minus
 * 引数
   * file_path (str, pathlib.WindowsPath): Excelファイルのパス
   * target_date (str): ターゲットとなる日付
@@ -154,14 +154,15 @@ import business_days as bd
 from pathlib import Path
 
 file_path = Path.cwd() / 'non_business_days.xlsx'
-target_date = '2024/08/14'
+target_date = '2025/01/14'
 days_to_subtract = 3
+
 print(bd.calc_minus(file_path, target_date, days_to_subtract))
 ```
 
 ### 実行結果
 
-> 2024/08/08
+> 2025/01/08
 
 ### 補足
 
@@ -175,11 +176,48 @@ from pathlib import Path
 
 file_path = Path.cwd() / 'non_business_days.xlsx'
 sheet_name = 'Sheet1'
-target_date = '2024/08/14'
+target_date = '2025/01/14'
 days_to_subtract = 3
 print(bd.calc_minus(file_path, target_date, days_to_subtract, sheet_name))
 ```
 
 #### 実行結果
 
-> 2024/08/08
+> 2025/01/08
+
+---
+
+## business_days.py
+
+### 指定した日付に指定した営業日数を足した日付を返す関数
+
+* 関数名: calc_plus
+* 引数
+  * file_path (str, pathlib.WindowsPath): Excelファイルのパス
+  * target_date (str): ターゲットとなる日付
+  * days_to_addition (int): ターゲットの日付に足す営業日数
+  * sheet_name (str, optional): シート名
+* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
+* 戻り値
+  * str: 指定した日付に指定した営業日数を足した日付
+
+### インプットとなるExcelファイル
+
+* インプットに関してはcountと同じ
+
+### 使い方
+
+```python
+import business_days as bd
+from pathlib import Path
+
+file_path = Path.cwd() / 'non_business_days.xlsx'
+target_date = '2025/01/14'
+days_to_addition = 3
+
+print(bd.calc_plus(file_path, target_date, days_to_addition))
+```
+
+### 実行結果
+
+> 2025/01/17
