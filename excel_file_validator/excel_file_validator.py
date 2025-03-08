@@ -1,44 +1,47 @@
+import pandas as pd
 from pathlib import Path
-from openpyxl import load_workbook
 
 
-def check_excel_file(file_path: str, sheet_name: str = 'Sheet1') -> bool:
+def check_excel_file(file_path: Path, check_sheet_names: list = ['Sheet1']) -> bool:
     """
     指定されたExcelファイルとシートの存在を確認し、読み込み可能かを検証する関数
 
     Args:
-        file_path (str): チェックするExcelファイルのパス
-        sheet_name (str, optional): 存在を確認するシート名（デフォルトは'Sheet1'）
+        file_path (Path): チェックするExcelファイルのパス（Pathオブジェクト）
+        check_sheet_names (list): 存在を確認したいシート名のリスト
 
     Returns:
-        bool: ファイルとシートが存在し読み込み可能であれば True、そうでなければ False
+        bool: ファイルとシートが存在し読み込み可能であれば True、エラーがあれば False
     """
-    file = Path(file_path)
+    file_path = Path(file_path)
 
-    # ファイルの存在チェック
-    if not file.exists() or file.is_dir():
-        print(f'エラー: 指定したファイルが存在しないかディレクトリです -> {file_path}')
+    if not file_path.exists():
+        print(f'エラー: ファイルが見つかりません -> {file_path}')
         return False
 
     try:
-        # ファイルの読み込みチェック
-        wb = load_workbook(file_path, data_only=True)
+        with pd.ExcelFile(file_path) as xlsx:
+            print(f'ファイルを正常に読み込みました -> {file_path.name}')
 
-        # シート名の存在チェック
-        if sheet_name not in wb.sheetnames:
-            print(f'エラー: 指定したシートが存在しません -> {sheet_name}')
-            return False
+            sheet_names = xlsx.sheet_names
+            sheet_check = {sheet: sheet in sheet_names for sheet in check_sheet_names}
 
-        print('チェック完了: ファイルとシートは有効です')
-        return True
+            if not all(sheet_check.values()):
+                print('エラー: 存在しないシートがあります')
+                print(sheet_check)
+                return False
 
-    # 読み込み時のエラーハンドリング
+            print('チェック対象シートはすべて存在します')
+            print(check_sheet_names)
+            return True
+
     except FileNotFoundError:
         print(f'エラー: ファイルが見つかりません -> {file_path}')
-        return False
     except PermissionError:
-        print(f'エラー: ファイルのアクセス権がありません -> {file_path}')
-        return False
+        print(f'エラー: ファイルへのアクセスが拒否されました -> {file_path}')
+    except ValueError as e:
+        print(f'エラー: {e}')
     except Exception as e:
-        print(f'エラー: ファイルを読み込めませんでした -> {e}')
-        return False
+        print(f'予期しないエラーが発生しました: {e}')
+
+    return False

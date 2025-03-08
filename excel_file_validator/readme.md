@@ -14,21 +14,26 @@
 
 * 関数名: check_excel_file
 * 引数
-  * file_path (str): チェックするExcelファイルのパス
-  * sheet_name (str, optional): 存在を確認するシート名（デフォルトは'Sheet1'）
+  * file_path (Path): チェックするExcelファイルのパス（Pathオブジェクト）
+  * check_sheet_names (list): 存在を確認したいシート名のリスト（デフォルトは['Sheet1']）
 * 戻り値
-  * bool: ファイルとシートが存在し読み込み可能であれば True、そうでなければ False
+  * bool: ファイルとシートが存在し読み込み可能であれば True、エラーがあれば False
+
+### 補足
+
+* 引数に Path オブジェクトを想定しているが念のため変換処理を行う
+* 例外発生時も False を返す
 
 ### 使い方
 
 * カレントディレクトリに配置したファイルを対象とした場合のサンプル
 
 ```python
-import excel_file_validator
+import pandas as pd
 from pathlib import Path
 
 file_path = Path.cwd() / 'test.xlsx'
-sheet_name = 'Sheet1'
-result = excel_file_validator.check_excel_file(file_path, sheet_name)
-print('チェック結果:', result)
+check_sheet_names = ['Sheet1', 'Sheet2', 'SheetA', 'SheetB']
+file_is_safe = check_excel_file(file_path, check_sheet_names)
+print('チェック結果:', file_is_safe)
 ```
