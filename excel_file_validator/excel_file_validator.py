@@ -24,11 +24,11 @@ def check_excel_file(file_path: Path, check_sheet_names: list = ['Sheet1']) -> b
             print(f'ファイルを正常に読み込みました -> {file_path.name}')
 
             sheet_names = xlsx.sheet_names
-            sheet_check = {sheet: sheet in sheet_names for sheet in check_sheet_names}
+            sheet_is_exist = {sheet: sheet in sheet_names for sheet in check_sheet_names}
 
-            if not all(sheet_check.values()):
+            if not all(sheet_is_exist.values()):
                 print('エラー: 存在しないシートがあります')
-                print(sheet_check)
+                print(sheet_is_exist)
                 return False
 
             print('チェック対象シートはすべて存在します')

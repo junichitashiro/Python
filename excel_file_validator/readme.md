@@ -37,3 +37,35 @@ check_sheet_names = ['Sheet1', 'Sheet2', 'SheetA', 'SheetB']
 file_is_safe = check_excel_file(file_path, check_sheet_names)
 print('チェック結果:', file_is_safe)
 ```
+### 可読性を優先した書き方
+
+* 各シートの存在確認処理は別の書き方に変更ができる
+
+```python
+sheet_is_exist = {sheet: sheet in excel_file.sheet_names for sheet in check_sheet_names}
+```
+
+#### 処理をすべて分解したパターン
+
+```python
+sheet_is_exist = {}  # 空の辞書を作成
+
+for sheet in check_sheet_names:  # check_sheet_names の各シートを順に処理
+    if sheet in excel_file.sheet_names:  # シートが Excel 内に存在するか判定
+        sheet_is_exist[sheet] = True   # 存在する場合 True
+    else:
+        sheet_is_exist[sheet] = False  # 存在しない場合 False
+
+print(sheet_is_exist)
+```
+
+#### 分解を簡易化したパターン
+
+```python
+sheet_is_exist = {}
+
+for sheet in check_sheet_names:
+    sheet_is_exist[sheet] = sheet in excel_file.sheet_names  # 判定結果を直接格納
+
+print(sheet_is_exist)
+```
