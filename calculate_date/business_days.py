@@ -88,7 +88,7 @@ def calc_minus(file_path: str, target_date: str, days_to_subtract: int, sheet_na
 
     # 指定日のチェック
     if target_date in non_business_days:
-        return r'指定した日付は非営業日です'
+        return '指定した日付は非営業日です'
 
     # 営業日数を計算
     while days_to_subtract > 0:
@@ -127,7 +127,7 @@ def calc_plus(file_path: str, target_date: str, days_to_addition: int, sheet_nam
 
     # 指定日のチェック
     if target_date in non_business_days:
-        return r'指定した日付は非営業日です'
+        return '指定した日付は非営業日です'
 
     # 営業日数を計算
     while days_to_addition > 0:

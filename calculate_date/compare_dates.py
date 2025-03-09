@@ -14,4 +14,4 @@ def compare(date1: str, date2: str) -> str:
     elif d1 < d2:
         return f'{date2} の方が未来日です'
     else:
-        return r'同じ日付です'
+        return '同じ日付です'
