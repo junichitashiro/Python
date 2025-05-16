@@ -1,17 +1,18 @@
 import pandas as pd
 from datetime import datetime
+from pathlib import Path
+from typing import Optional
 
 
-def non_business_days_read(file_path: str, sheet_name: str = None) -> pd.DataFrame:
+def non_business_days_read(file_path: Path, sheet_name: Optional[str] = None) -> pd.DataFrame:
     """
     Excelに記載した非営業日一覧をデータフレームに変換して返す関数  
-    シート名の指定がない場合は先頭シートを対象とする  
     A1セルはヘッダ名として「非営業日」を記載する  
     A2セル以降にyyyy/m/d形式で非営業日を記載する
 
     Args:
-        file_path (str, pathlib.WindowsPath): Excelファイルのパス
-        sheet_name (str, optional): シート名
+        file_path (Path): Excelファイルのパス
+        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 
     Returns:
         pd.DataFrame: 非営業日一覧のデータフレーム
@@ -26,15 +27,15 @@ def non_business_days_read(file_path: str, sheet_name: str = None) -> pd.DataFra
     return df
 
 
-def count(file_path: str, future_date: str, sheet_name: str = None) -> int:
+def count(file_path: Path, future_date: str, sheet_name: Optional[str] = None) -> int:
     """
     与えられた日付までの営業日数を返す関数  
     非営業日の一覧は別途Excelファイルに記載する
 
     Args:
-        file_path (str, pathlib.WindowsPath): Excelファイルのパス
+        file_path (Path): Excelファイルのパス
         future_date (str): 未来日
-        sheet_name (str, optional): シート名
+        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 
     Returns:
         int: 未来日から非営業日を減算した日数
@@ -62,17 +63,17 @@ def count(file_path: str, future_date: str, sheet_name: str = None) -> int:
     return business_days
 
 
-def calc_minus(file_path: str, target_date: str, days_to_subtract: int, sheet_name: str = None) -> str:
+def calc_minus(file_path: Path, target_date: str, days_to_subtract: int, sheet_name: Optional[str] = None) -> str:
     """
     日付に対して指定した営業日数を引いた日付を返す関数  
     非営業日の一覧は別途Excelファイルに記載する  
     指定する日付が非営業日だった場合はその旨を知らせるメッセージを返す
 
     Args:
-        file_path (str, pathlib.WindowsPath): Excelファイルのパス
+        file_path (Path): Excelファイルのパス
         target_date (str): ターゲットとなる日付
         days_to_subtract (int): ターゲットの日付から引く営業日数
-        sheet_name (str, optional): シート名
+        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 
     Returns:
         str: 指定した日付から指定した営業日数を引いた日付
@@ -101,17 +102,17 @@ def calc_minus(file_path: str, target_date: str, days_to_subtract: int, sheet_na
     return result_date
 
 
-def calc_plus(file_path: str, target_date: str, days_to_addition: int, sheet_name: str = None) -> str:
+def calc_plus(file_path: Path, target_date: str, days_to_addition: int, sheet_name: Optional[str] = None) -> str:
     """
     日付に対して指定した営業日数を足した日付を返す関数  
     非営業日の一覧は別途Excelファイルに記載する  
     指定する日付が非営業日だった場合はその旨を知らせるメッセージを返す
 
     Args:
-        file_path (str, pathlib.WindowsPath): Excelファイルのパス
+        file_path (Path): Excelファイルのパス
         target_date (str): ターゲットとなる日付
         days_to_addition (int): ターゲットの日付から引く営業日数
-        sheet_name (str, optional): シート名
+        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 
     Returns:
         str: 指定した日付から指定した営業日数を引いた日付

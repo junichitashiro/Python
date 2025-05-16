@@ -64,9 +64,9 @@ print(cd.compare(date1, date2))
 
 * 関数名: count
 * 引数
-  * file_path (str, pathlib.WindowsPath): Excelファイルのパス
+  * file_path (Path): Excelファイルのパス
   * future_date (str): 未来日
-  * sheet_name (str, optional): シート名
+  * sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 * 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
 * 戻り値
   * int: 未来日から非営業日を減算した日数
@@ -135,10 +135,10 @@ print(bd.count(file_path, future_date, sheet_name))
 
 * 関数名: calc_minus
 * 引数
-  * file_path (str, pathlib.WindowsPath): Excelファイルのパス
+  * file_path (Path): Excelファイルのパス
   * target_date (str): ターゲットとなる日付
   * business_days_to_subtract (int): ターゲットの日付から引く営業日数
-  * sheet_name (str, optional): シート名
+  * sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 * 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
 * 戻り値
   * str: 指定した日付から指定した営業日数を引いた日付
@@ -193,10 +193,10 @@ print(bd.calc_minus(file_path, target_date, days_to_subtract, sheet_name))
 
 * 関数名: calc_plus
 * 引数
-  * file_path (str, pathlib.WindowsPath): Excelファイルのパス
+  * file_path (Path): Excelファイルのパス
   * target_date (str): ターゲットとなる日付
   * days_to_addition (int): ターゲットの日付に足す営業日数
-  * sheet_name (str, optional): シート名
+  * sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
 * 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
 * 戻り値
   * str: 指定した日付に指定した営業日数を足した日付

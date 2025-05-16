@@ -1,15 +1,17 @@
 import pandas as pd
+from pathlib import Path
+from typing import Any, Optional
 
 
-def load_file(file_path, file_type='csv', sheet_name=None, **kwargs):
+def load_file(file_path: Path, file_type: str = 'csv', sheet_name: Optional[str] = None, **kwargs) -> Any | pd.DataFrame | None:
     """
     CSVまたはExcelファイルをエラーハンドリング付きで読み込む共通関数
     ヘッダなし1行のファイルを許容する場合は[**kwargs]に[header=None]を指定する
 
     Args:
-        file_path (str): 読み込むファイルのパス
+        file_path (Path): 読み込むファイルのパス
         file_type (str): ファイルの種類（'csv' または 'excel'）
-        sheet_name (str, optional): Excelファイルの場合のシート名
+        sheet_name (Optional[str], optional): Excelファイルの場合は読み込むシート名、省略時（None）は先頭のシートを使用する
         **kwargs: pandasの読み込み関数に渡す追加のキーワード引数
 
     Returns:

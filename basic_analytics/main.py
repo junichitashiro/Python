@@ -27,7 +27,7 @@ cor = df.corr()
 cor.to_excel('相関係数.xlsx')
 
 # 相関係数のヒートマップを変数に格納する
-heatmap = sns.heatmap(cor, cmap=sns.color_palette('Blues', 20), annot=True, fmt='.2f', vmin=-1, vmax=1)
+heatmap = sns.heatmap(cor, cmap=sns.color_palette('Blues', 20, as_cmap=True), annot=True, fmt='.2f', vmin=-1, vmax=1)
 
 # ヒートマップを出力する
 plt.savefig('相関係数.png', bbox_inches='tight')

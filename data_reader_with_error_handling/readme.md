@@ -14,9 +14,9 @@
 
 * 関数名: load_file
 * 引数
-  * file_path (str): 読み込むファイルのパス
+  * file_path (Path): 読み込むファイルのパス
   * file_type (str): ファイルの種類（'csv' または 'excel'）
-  * sheet_name (str, optional): Excelファイルの場合のシート名
+  * sheet_name (Optional[str], optional): Excelファイルの場合は読み込むシート名、省略時（None）は先頭のシートを使用する
   * **kwargs: pandasの読み込み関数に渡す追加のキーワード引数
 * 戻り値
   * pd.DataFrame: 読み込んだデータ
