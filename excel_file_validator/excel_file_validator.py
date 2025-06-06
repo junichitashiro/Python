@@ -1,18 +1,25 @@
-import pandas as pd
 from pathlib import Path
+from typing import Sequence
+
+import pandas as pd
 
 
-def check_excel_file(file_path: Path, check_sheet_names: list = ['Sheet1']) -> bool:
+def check_excel_file(file_path: Path, check_sheet_names: Sequence[str] | None = None) -> bool:
     """
-    指定されたExcelファイルとシートの存在を確認し、読み込み可能かを検証する関数
+    指定されたExcelファイルが存在し、必要に応じて特定のシートが含まれているかを確認する。
 
     Args:
-        file_path (Path): チェックするExcelファイルのパス（Pathオブジェクト）
-        check_sheet_names (list): 存在を確認したいシート名のリスト
+        file_path (Path): チェック対象のExcelファイルのパス（Pathオブジェクト）。
+        check_sheet_names (Sequence[str] | None, optional): 存在を確認したいシート名のリスト。
+            指定がない場合はファイルの存在と読み込みのみをチェックする。
 
     Returns:
-        bool: ファイルとシートが存在し読み込み可能であれば True、エラーがあれば False
+        bool: ファイルが存在し、必要なシートがすべて存在する場合は True。
+            ファイルが存在しない、開けない、または指定シートが不足している場合は False。
     """
+    if check_sheet_names is None:
+        check_sheet_names = ['Sheet1']
+
     file_path = Path(file_path)
 
     if not file_path.exists():
