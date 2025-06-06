@@ -60,21 +60,19 @@ print(cd.compare(date1, date2))
 
 ## business_days.py
 
-### 与えられた日付（未来日）までの営業日を返す関数
+### 与えられた未来日までの営業日を返す関数
 
 * 関数名: count
 * 引数
-  * file_path (Path): Excelファイルのパス
-  * future_date (str): 未来日
-  * sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
-* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
+  * file_path (Path): 非営業日一覧を記載したExcelファイルのパス
+  * future_date (str): yyyy/mm/dd 形式の未来日
 * 戻り値
-  * int: 未来日から非営業日を減算した日数
+  * int: 今日から未来日までの営業日数、過去日の場合は符号がマイナスになる
 
 ### インプットとなるExcelファイル
 
 * 非営業日の一覧をExcelファイルのA列に記載する
-* シート名の指定がない場合は先頭シートを対象とする
+* シート名を **非営業日** とする
 * A1セルはヘッダ名として **非営業日** を記載する
 * A2セル以降にyyyy/m/d形式で非営業日を記載する
   * 入力例
@@ -82,50 +80,30 @@ print(cd.compare(date1, date2))
     |       |     A     |
     | :---: | :-------: |
     |   1   | 非営業日  |
-    |   2   | 2024/1/1  |
-    |   3   | 2024/1/6  |
-    |   4   | 2024/1/7  |
-    |   5   | 2024/1/8  |
-    |   6   | 2024/1/13 |
-    |   7   | 2024/1/14 |
-    |   8   | 2024/1/20 |
+    |   2   | 2025/1/1  |
+    |   3   | 2025/1/6  |
+    |   4   | 2025/1/7  |
+    |   5   | 2025/1/8  |
+    |   6   | 2025/1/13 |
+    |   7   | 2025/1/14 |
+    |   8   | 2025/1/20 |
 
 ### 使い方
 
-2024年8月4日に実行
+2025年6月6日に実行した場合
 
 ```python
 import business_days as bd
 from pathlib import Path
 
 file_path = Path.cwd() / 'non_business_days.xlsx'
-future_date = '2024/08/13'
+future_date = '2024/06/10'
 print(bd.count(file_path, future_date))
 ```
 
 ### 実行結果
 
-> 6
-
-### 補足
-
-非営業日を記載しているシート名（Sheet1）を明示することも可能
-
-#### 使い方
-
-```python
-import business_days as bd
-from pathlib import Path
-
-file_path = Path.cwd() / 'non_business_days.xlsx'
-sheet_name = 'Sheet1'
-future_date = '2024/08/13'
-print(bd.count(file_path, future_date, sheet_name))
-```
-
-#### 実行結果
-
-> 6
+> 3
 
 ---
 
@@ -135,13 +113,11 @@ print(bd.count(file_path, future_date, sheet_name))
 
 * 関数名: calc_minus
 * 引数
-  * file_path (Path): Excelファイルのパス
-  * target_date (str): ターゲットとなる日付
-  * business_days_to_subtract (int): ターゲットの日付から引く営業日数
-  * sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
-* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
+  * file_path (Path): 非営業日一覧を記載したExcelファイルのパス
+  * target_date (str): yyyy/mm/dd 形式のターゲット日
+  * business_days_to_subtract (int): 営業日として引く日数
 * 戻り値
-  * str: 指定した日付から指定した営業日数を引いた日付
+  * str: 営業日を差し引いた日付 or 非営業日である旨のメッセージ
 
 ### インプットとなるExcelファイル
 
@@ -154,7 +130,7 @@ import business_days as bd
 from pathlib import Path
 
 file_path = Path.cwd() / 'non_business_days.xlsx'
-target_date = '2025/01/14'
+target_date = '2025/06/10'
 days_to_subtract = 3
 
 print(bd.calc_minus(file_path, target_date, days_to_subtract))
@@ -162,28 +138,7 @@ print(bd.calc_minus(file_path, target_date, days_to_subtract))
 
 ### 実行結果
 
-> 2025/01/08
-
-### 補足
-
-こちらも非営業日を記載しているシート名（Sheet1）を明示することが可能
-
-#### 使い方
-
-```python
-import business_days as bd
-from pathlib import Path
-
-file_path = Path.cwd() / 'non_business_days.xlsx'
-sheet_name = 'Sheet1'
-target_date = '2025/01/14'
-days_to_subtract = 3
-print(bd.calc_minus(file_path, target_date, days_to_subtract, sheet_name))
-```
-
-#### 実行結果
-
-> 2025/01/08
+> 2025/06/05
 
 ---
 
@@ -193,13 +148,11 @@ print(bd.calc_minus(file_path, target_date, days_to_subtract, sheet_name))
 
 * 関数名: calc_plus
 * 引数
-  * file_path (Path): Excelファイルのパス
-  * target_date (str): ターゲットとなる日付
-  * days_to_addition (int): ターゲットの日付に足す営業日数
-  * sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
-* 形式: 'yyyy/m/d' または 'yyyy/mm/dd'
+  * file_path (Path): 非営業日一覧を記載したExcelファイルのパス
+  * target_date (str): yyyy/mm/dd 形式のターゲット日
+  * days_to_addition (int): 営業日として加算する日数
 * 戻り値
-  * str: 指定した日付に指定した営業日数を足した日付
+  * str: 営業日を加算した日付 または 非営業日である旨のメッセージ
 
 ### インプットとなるExcelファイル
 
@@ -212,7 +165,7 @@ import business_days as bd
 from pathlib import Path
 
 file_path = Path.cwd() / 'non_business_days.xlsx'
-target_date = '2025/01/14'
+target_date = '2025/06/06'
 days_to_addition = 3
 
 print(bd.calc_plus(file_path, target_date, days_to_addition))
@@ -220,4 +173,4 @@ print(bd.calc_plus(file_path, target_date, days_to_addition))
 
 ### 実行結果
 
-> 2025/01/17
+> 2025/06/11

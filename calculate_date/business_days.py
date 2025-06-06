@@ -1,141 +1,123 @@
-import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional
+
+import pandas as pd
 
 
-def non_business_days_read(file_path: Path, sheet_name: Optional[str] = None) -> pd.DataFrame:
+def non_business_days_read(file_path: Path) -> pd.DataFrame:
     """
-    Excelに記載した非営業日一覧をデータフレームに変換して返す関数  
-    A1セルはヘッダ名として「非営業日」を記載する  
-    A2セル以降にyyyy/m/d形式で非営業日を記載する
-
-    Args:
-        file_path (Path): Excelファイルのパス
-        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
+    Excelファイルから「非営業日」シートを読み取り、非営業日の一覧をDataFrameとして返す関数。
+    シートが存在しない場合、または「非営業日」列がない場合はエラーを発生させる。
 
     Returns:
-        pd.DataFrame: 非営業日一覧のデータフレーム
+        pd.DataFrame: 非営業日（yyyy/mm/dd 形式）のDataFrame
+
+    Raises:
+        ValueError: シートまたは必要な列が存在しない場合
     """
-    if sheet_name:
-        df = pd.read_excel(file_path, sheet_name=sheet_name, usecols='A')
-    else:
-        df = pd.read_excel(file_path, usecols='A')
+    sheet_name = '非営業日'
+
+    # Excelファイル内のシート一覧を取得して存在確認
+    try:
+        sheet_names = pd.ExcelFile(file_path).sheet_names
+    except Exception as e:
+        raise ValueError(f'Excelファイルの読み込みに失敗しました: {e}')
+
+    if sheet_name not in sheet_names:
+        raise ValueError('「非営業日」シートがありません')
+
+    # 指定シートからA列を読み込む
+    df = pd.read_excel(file_path, sheet_name=sheet_name, usecols='A')
+
+    if '非営業日' not in df.columns:
+        raise ValueError('「非営業日」シートのA列に「非営業日」ヘッダが必要です')
 
     df['非営業日'] = pd.to_datetime(df['非営業日']).dt.strftime('%Y/%m/%d')
-
     return df
 
 
-def count(file_path: Path, future_date: str, sheet_name: Optional[str] = None) -> int:
+def count(file_path: Path, future_date: str) -> int:
     """
-    与えられた日付までの営業日数を返す関数  
-    非営業日の一覧は別途Excelファイルに記載する
+    与えられた未来日までの営業日数を返す関数。
+
+    Args:
+        file_path (Path): 非営業日一覧を記載したExcelファイルのパス
+        future_date (str): yyyy/mm/dd 形式の未来日
+
+    Returns:
+        int: 今日から未来日までの営業日数
+    """
+    today = datetime.now().date()
+    future_date_obj = datetime.strptime(future_date, '%Y/%m/%d').date()
+
+    # 非営業日一覧を取得し、datetime型に変換する
+    df = non_business_days_read(file_path)
+    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d').dt.date
+
+    count = sum(today <= d <= future_date_obj for d in non_business_days)
+    # 未来日までの日数を計算する　※営業日の考え方で加算日数を調整する
+    total_days = (future_date_obj - today).days + 1
+
+    return total_days - count
+
+
+def calc_minus(file_path: Path, target_date: str, days_to_subtract: int) -> str:
+    """
+    指定日から営業日ベースで指定日数を引いた日付を返す関数。
+    対象日が非営業日の場合はその旨を返す。
 
     Args:
         file_path (Path): Excelファイルのパス
-        future_date (str): 未来日
-        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
+        target_date (str): yyyy/mm/dd 形式のターゲット日
+        days_to_subtract (int): 営業日として引く日数
 
     Returns:
-        int: 未来日から非営業日を減算した日数
+        str: 営業日を差し引いた日付 または 非営業日である旨のメッセージ
     """
-    # Excelファイルから非営業日一覧を取得する
-    df = non_business_days_read(file_path, sheet_name)
-
-    # 非営業日をリストに変換する
-    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d')
-    # 未来日を計算可能な形式に変換する
-    future_date_obj = datetime.strptime(future_date, '%Y/%m/%d')
-
-    # 非営業日一覧からすでに経過しているものを除く
-    non_business_days = non_business_days[non_business_days >= datetime.today()]
-    # 未来日までに設定されている非営業日を抽出する
-    non_business_days_until_future = non_business_days[non_business_days <= future_date_obj]
-    # 残った非営業日数
-    non_business_days_count = len(non_business_days_until_future)
-
-    # 未来日までの日数を計算する　※営業日の考え方で加算日を調整
-    total_days = (future_date_obj - datetime.today()).days + 1
-    # 非営業日を減算し営業日数を計算する
-    business_days = total_days - non_business_days_count
-
-    return business_days
-
-
-def calc_minus(file_path: Path, target_date: str, days_to_subtract: int, sheet_name: Optional[str] = None) -> str:
-    """
-    日付に対して指定した営業日数を引いた日付を返す関数  
-    非営業日の一覧は別途Excelファイルに記載する  
-    指定する日付が非営業日だった場合はその旨を知らせるメッセージを返す
-
-    Args:
-        file_path (Path): Excelファイルのパス
-        target_date (str): ターゲットとなる日付
-        days_to_subtract (int): ターゲットの日付から引く営業日数
-        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
-
-    Returns:
-        str: 指定した日付から指定した営業日数を引いた日付
-    """
-    # Excelファイルから非営業日一覧を取得する
-    df = non_business_days_read(file_path, sheet_name)
-
-    # 非営業日をリストに変換する
-    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d')
-    # 指定する未来日と比較できる形式に変換する
-    non_business_days = non_business_days.apply(lambda x: x.strftime('%Y/%m/%d')).tolist()
-    target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
+    # 非営業日一覧を取得し、datetime型に変換する
+    df = non_business_days_read(file_path)
+    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d').dt.strftime('%Y/%m/%d').tolist()
 
     # 指定日のチェック
     if target_date in non_business_days:
         return '指定した日付は非営業日です'
 
-    # 営業日数を計算
+    target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
+
     while days_to_subtract > 0:
-        target_date_obj -= pd.Timedelta(days=1)
+        target_date_obj -= timedelta(days=1)
         if target_date_obj.strftime('%Y/%m/%d') not in non_business_days:
             days_to_subtract -= 1
 
-    result_date = target_date_obj.strftime('%Y/%m/%d')
-
-    return result_date
+    return target_date_obj.strftime('%Y/%m/%d')
 
 
-def calc_plus(file_path: Path, target_date: str, days_to_addition: int, sheet_name: Optional[str] = None) -> str:
+def calc_plus(file_path: Path, target_date: str, days_to_addition: int) -> str:
     """
-    日付に対して指定した営業日数を足した日付を返す関数  
-    非営業日の一覧は別途Excelファイルに記載する  
-    指定する日付が非営業日だった場合はその旨を知らせるメッセージを返す
+    指定日から営業日ベースで指定日数を足した日付を返す関数。
+    対象日が非営業日の場合はその旨を返す。
 
     Args:
-        file_path (Path): Excelファイルのパス
-        target_date (str): ターゲットとなる日付
-        days_to_addition (int): ターゲットの日付から引く営業日数
-        sheet_name (Optional[str], optional): 読み込むシート名、省略時（None）は先頭のシートを使用する
+        file_path (Path): 非営業日一覧が記載されたExcelファイルのパス
+        target_date (str): yyyy/mm/dd 形式のターゲット日
+        days_to_addition (int): 営業日として加算する日数
 
     Returns:
-        str: 指定した日付から指定した営業日数を引いた日付
+        str: 営業日を加算した日付 または 非営業日である旨のメッセージ
     """
-    # Excelファイルから非営業日一覧を取得する
-    df = non_business_days_read(file_path, sheet_name)
-
-    # 非営業日をリストに変換する
-    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d')
-    # 指定する未来日と比較できる形式に変換する
-    non_business_days = non_business_days.apply(lambda x: x.strftime('%Y/%m/%d')).tolist()
-    target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
+    # 非営業日一覧を取得し、datetime型に変換する
+    df = non_business_days_read(file_path)
+    non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d').dt.strftime('%Y/%m/%d').tolist()
 
     # 指定日のチェック
     if target_date in non_business_days:
         return '指定した日付は非営業日です'
 
-    # 営業日数を計算
+    target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
+
     while days_to_addition > 0:
-        target_date_obj += pd.Timedelta(days=1)
+        target_date_obj += timedelta(days=1)
         if target_date_obj.strftime('%Y/%m/%d') not in non_business_days:
             days_to_addition -= 1
 
-    result_date = target_date_obj.strftime('%Y/%m/%d')
-
-    return result_date
+    return target_date_obj.strftime('%Y/%m/%d')
