@@ -6,7 +6,7 @@ import pandas as pd
 
 def non_business_days_read(file_path: Path) -> pd.DataFrame:
     """
-    Excelファイルから「非営業日」シートを読み取り、非営業日の一覧をDataFrameとして返す関数。
+    Excelファイルから「非営業日マスタ」シートを読み取り、非営業日の一覧をDataFrameとして返す関数。
     シートが存在しない場合、または「非営業日」列がない場合はエラーを発生させる。
 
     Returns:
@@ -15,7 +15,7 @@ def non_business_days_read(file_path: Path) -> pd.DataFrame:
     Raises:
         ValueError: シートまたは必要な列が存在しない場合
     """
-    sheet_name = '非営業日'
+    sheet_name = '非営業日マスタ'
 
     # Excelファイル内のシート一覧を取得して存在確認
     try:
@@ -24,13 +24,13 @@ def non_business_days_read(file_path: Path) -> pd.DataFrame:
         raise ValueError(f'Excelファイルの読み込みに失敗しました: {e}')
 
     if sheet_name not in sheet_names:
-        raise ValueError('「非営業日」シートがありません')
+        raise ValueError(f'【{sheet_name}】シートがありません')
 
     # 指定シートからA列を読み込む
     df = pd.read_excel(file_path, sheet_name=sheet_name, usecols='A')
 
     if '非営業日' not in df.columns:
-        raise ValueError('「非営業日」シートのA列に「非営業日」ヘッダが必要です')
+        raise ValueError(f'【{sheet_name}】シートのA列に「非営業日」ヘッダが必要です')
 
     df['非営業日'] = pd.to_datetime(df['非営業日']).dt.strftime('%Y/%m/%d')
     return df
