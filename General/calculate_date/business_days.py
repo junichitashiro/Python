@@ -64,7 +64,7 @@ def count(file_path: Path, future_date: str) -> int:
 def calc_minus(file_path: Path, target_date: str, days_to_subtract: int) -> str:
     """
     指定日から営業日ベースで指定日数を引いた日付を返す関数。
-    対象日が非営業日の場合はその旨を返す。
+    対象日が非営業日の場合はその旨を表示する。
 
     Args:
         file_path (Path): Excelファイルのパス
@@ -72,15 +72,15 @@ def calc_minus(file_path: Path, target_date: str, days_to_subtract: int) -> str:
         days_to_subtract (int): 営業日として引く日数
 
     Returns:
-        str: 営業日を差し引いた日付 または 非営業日である旨のメッセージ
+        str: 営業日を差し引いた日付
     """
     # 非営業日一覧を取得し、datetime型に変換する
     df = non_business_days_read(file_path)
     non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d').dt.strftime('%Y/%m/%d').tolist()
 
-    # 指定日のチェック
+    # 指定日の非営業日チェック
     if target_date in non_business_days:
-        return '指定した日付は非営業日です'
+        print('指定した日付は非営業日です')
 
     target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
 
@@ -95,7 +95,7 @@ def calc_minus(file_path: Path, target_date: str, days_to_subtract: int) -> str:
 def calc_plus(file_path: Path, target_date: str, days_to_addition: int) -> str:
     """
     指定日から営業日ベースで指定日数を足した日付を返す関数。
-    対象日が非営業日の場合はその旨を返す。
+    対象日が非営業日の場合はその旨を表示する。
 
     Args:
         file_path (Path): 非営業日一覧が記載されたExcelファイルのパス
@@ -103,15 +103,15 @@ def calc_plus(file_path: Path, target_date: str, days_to_addition: int) -> str:
         days_to_addition (int): 営業日として加算する日数
 
     Returns:
-        str: 営業日を加算した日付 または 非営業日である旨のメッセージ
+        str: 営業日を加算した日付
     """
     # 非営業日一覧を取得し、datetime型に変換する
     df = non_business_days_read(file_path)
     non_business_days = pd.to_datetime(df.iloc[:, 0], format='%Y/%m/%d').dt.strftime('%Y/%m/%d').tolist()
 
-    # 指定日のチェック
+    # 指定日の非営業日チェック
     if target_date in non_business_days:
-        return '指定した日付は非営業日です'
+        print('指定した日付は非営業日です')
 
     target_date_obj = datetime.strptime(target_date, '%Y/%m/%d')
 
@@ -121,3 +121,17 @@ def calc_plus(file_path: Path, target_date: str, days_to_addition: int) -> str:
             days_to_addition -= 1
 
     return target_date_obj.strftime('%Y/%m/%d')
+
+
+from pathlib import Path
+
+file_path = Path.cwd() / 'non_business_days.xlsx'
+target_date = '2025/11/29'
+days_to_subtract = 3
+
+print(calc_minus(file_path, target_date, days_to_subtract))
+print(calc_plus(file_path, target_date, days_to_subtract))
+
+future_date = '2025/11/30'
+print(count(file_path, future_date))
+
